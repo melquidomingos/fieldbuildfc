@@ -374,10 +374,7 @@ canvas { max-width:100%; }
         Entrar no Sistema
       </button>
     </div>
-    <div class="login-footer">
-      <strong style="color:var(--text2)">Admin:</strong> admin<!---->@<!---->fieldbuildfc<!---->.<wbr>com &nbsp;·&nbsp; senha: admin123<br>
-      Gestor: gestor<!---->@<!---->fc<!---->.<wbr>com &nbsp;·&nbsp; Campo: campo<!---->@<!---->fc<!---->.<wbr>com &nbsp;·&nbsp; senha: 123456
-    </div>
+
   </div>
 </div>
 
@@ -2245,16 +2242,10 @@ async function saveMinhaSenha() {
 }
 
 // ─── BOOT ────────────────────────────────────────────────────────────
-
-
-// ─── BOOT ────────────────────────────────────────────────────────────
 async function boot() {
   await openDB();
   await seedData();
   await loadState();
-  // Pre-fill demo credentials via JS
-  document.getElementById('login-email').value = 'admin'+'@'+'fieldbuildfc.com';
-  document.getElementById('login-password').value = 'admin123';
 }
 
 window.doLogin = function() {
@@ -2271,10 +2262,10 @@ window.doLogin = function() {
 
 boot().catch(console.error);
 
-// Enter key for login
-document.addEventListener('DOMContentLoaded', function() {
-  var lp = document.getElementById('login-password');
-  if (lp) lp.addEventListener('keydown', function(e) { if(e.key==='Enter') window.doLogin(); });
+// Enter key works on both email and password fields
+['login-email','login-password'].forEach(function(id) {
+  var el = document.getElementById(id);
+  if (el) el.addEventListener('keydown', function(e) { if(e.key==='Enter') window.doLogin(); });
 });
 </script>
 </body>
