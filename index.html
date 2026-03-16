@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FieldBuildFC — Guia de Publicação no GitHub</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0A0F14;
+    --surface: #111820;
+    --surface2: #1A2430;
+    --border: #1E2D3D;
+    --border2: #2A3F55;
+    --accent: #F5A623;
+    --text: #E8EFF6;
+    --text2: #8BA3BC;
+    --text3: #4A6580;
+    --success: #10B981;
+    --info: #3B82F6;
+    --warning: #F59E0B;
+    --danger: #EF4444;
+    --code-bg: #0D1922;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; font-size: 15px; line-height: 1.7; }
+
+  /* ── HEADER ── */
+  .hero {
+    background: linear-gradient(135deg, #0F1923 0%, #1A2430 100%);
+    border-bottom: 1px solid var(--border2);
+    padding: 56px 40px 48px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 0%, rgba(245,166,35,0.08) 0%, transparent 65%);
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(245,166,35,0.1); border: 1px solid rgba(245,166,35,0.25);
+    color: var(--accent); padding: 5px 14px; border-radius: 20px;
+    font-size: 11px; font-family: 'IBM Plex Mono', monospace;
+    letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 20px;
+  }
+  .hero h1 { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 42px; line-height: 1.05; margin-bottom: 14px; }
+  .hero h1 span { color: var(--accent); }
+  .hero p { color: var(--text2); font-size: 17px; max-width: 520px; margin: 0 auto; }
+
+  /* ── LAYOUT ── */
+  .container { max-width: 860px; margin: 0 auto; padding: 48px 32px 80px; }
+
+  /* ── TOC ── */
+  .toc {
+    background: var(--surface); border: 1px solid var(--border2);
+    border-radius: 12px; padding: 24px 28px; margin-bottom: 48px;
+  }
+  .toc-title { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 14px; }
+  .toc-list { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+  .toc-list li { display: flex; align-items: center; gap: 10px; }
+  .toc-list a { color: var(--text2); text-decoration: none; font-size: 14px; transition: color .15s; display: flex; align-items: center; gap: 8px; }
+  .toc-list a:hover { color: var(--accent); }
+  .toc-num { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--text3); width: 22px; }
+
+  /* ── SECTION ── */
+  .section { margin-bottom: 56px; }
+  .section-label {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: 'IBM Plex Mono', monospace; font-size: 10px;
+    color: var(--text3); text-transform: uppercase; letter-spacing: 2px;
+    margin-bottom: 8px;
+  }
+  .section-num {
+    width: 22px; height: 22px; background: var(--accent); color: #000;
+    border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; flex-shrink: 0;
+  }
+  h2 { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 26px; color: var(--text); margin-bottom: 6px; line-height: 1.1; }
+  .section-desc { color: var(--text2); font-size: 14px; margin-bottom: 24px; }
+
+  /* ── STEPS ── */
+  .steps { display: flex; flex-direction: column; gap: 0; }
+  .step {
+    display: flex; gap: 20px; padding-bottom: 28px;
+    position: relative;
+  }
+  .step:not(:last-child)::before {
+    content: '';
+    position: absolute;
+    left: 17px; top: 36px; bottom: 0;
+    width: 2px; background: var(--border2);
+  }
+  .step-icon {
+    width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 700; font-family: 'IBM Plex Mono', monospace;
+    border: 2px solid var(--border2); background: var(--surface);
+    position: relative; z-index: 1;
+  }
+  .step-icon.done { background: rgba(16,185,129,0.15); border-color: var(--success); color: var(--success); }
+  .step-icon.active { background: rgba(245,166,35,0.15); border-color: var(--accent); color: var(--accent); }
+  .step-icon.info { background: rgba(59,130,246,0.15); border-color: var(--info); color: var(--info); }
+  .step-body { flex: 1; padding-top: 6px; }
+  .step-title { font-weight: 600; font-size: 15px; color: var(--text); margin-bottom: 6px; }
+  .step-text { color: var(--text2); font-size: 14px; margin-bottom: 10px; }
+
+  /* ── CODE BLOCKS ── */
+  .code-block {
+    background: var(--code-bg); border: 1px solid var(--border2);
+    border-radius: 8px; overflow: hidden; margin: 10px 0;
+    font-family: 'IBM Plex Mono', monospace; font-size: 13px;
+  }
+  .code-header {
+    background: var(--surface2); padding: 7px 14px;
+    display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+  }
+  .code-lang { font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: 1px; }
+  .code-copy {
+    font-size: 10px; color: var(--text3); cursor: pointer; background: none; border: none;
+    padding: 2px 8px; border-radius: 4px; transition: all .15s; font-family: 'IBM Plex Mono', monospace;
+  }
+  .code-copy:hover { background: var(--border2); color: var(--text); }
+  .code-body { padding: 14px 16px; overflow-x: auto; }
+  .code-body code { color: var(--text); line-height: 1.6; white-space: pre; }
+  .hl-comment { color: var(--text3); }
+  .hl-command { color: #79C0FF; }
+  .hl-string { color: #A5D6FF; }
+  .hl-accent { color: var(--accent); }
+  .hl-success { color: var(--success); }
+
+  /* ── CALLOUTS ── */
+  .callout {
+    border-radius: 8px; padding: 14px 16px; margin: 12px 0;
+    font-size: 13px; display: flex; gap: 10px; align-items: flex-start;
+  }
+  .callout-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+  .callout-body { flex: 1; }
+  .callout-title { font-weight: 600; margin-bottom: 3px; font-size: 13px; }
+  .callout.tip { background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.2); color: #6EE7B7; }
+  .callout.warning { background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.2); color: #FCD34D; }
+  .callout.info { background: rgba(59,130,246,0.08); border: 1px solid rgba(59,130,246,0.2); color: #93C5FD; }
+  .callout.danger { background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.2); color: #FCA5A5; }
+
+  /* ── INLINE CODE ── */
+  code { background: var(--surface2); border: 1px solid var(--border2); border-radius: 4px; padding: 1px 6px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--accent); }
+
+  /* ── DIVIDER ── */
+  .divider { border: none; border-top: 1px solid var(--border); margin: 48px 0; }
+
+  /* ── SUMMARY TABLE ── */
+  .summary-table { width: 100%; border-collapse: collapse; margin-top: 16px; font-size: 13px; }
+  .summary-table th { padding: 10px 14px; text-align: left; font-size: 10px; color: var(--text3); font-family: 'IBM Plex Mono', monospace; text-transform: uppercase; letter-spacing: .8px; border-bottom: 1px solid var(--border2); }
+  .summary-table td { padding: 12px 14px; border-bottom: 1px solid var(--border); color: var(--text2); vertical-align: top; }
+  .summary-table td:first-child { color: var(--text); font-weight: 500; }
+  .summary-table tr:last-child td { border-bottom: none; }
+
+  /* ── TREE ── */
+  .file-tree {
+    background: var(--code-bg); border: 1px solid var(--border2); border-radius: 8px;
+    padding: 16px 20px; font-family: 'IBM Plex Mono', monospace; font-size: 13px; line-height: 1.8;
+  }
+  .tree-dir { color: var(--info); }
+  .tree-file { color: var(--text2); }
+  .tree-main { color: var(--accent); font-weight: 500; }
+  .tree-comment { color: var(--text3); }
+
+  /* ── RESULT BOX ── */
+  .result-box {
+    background: linear-gradient(135deg, rgba(16,185,129,0.06) 0%, rgba(245,166,35,0.04) 100%);
+    border: 1px solid rgba(16,185,129,0.25); border-radius: 12px; padding: 24px 28px; margin-top: 32px;
+  }
+  .result-title { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 18px; color: var(--success); margin-bottom: 8px; }
+  .result-url { font-family: 'IBM Plex Mono', monospace; font-size: 14px; color: var(--accent); background: rgba(245,166,35,0.08); border: 1px solid rgba(245,166,35,0.2); padding: 10px 16px; border-radius: 6px; margin-top: 10px; display: block; }
+
+  /* ── CHECKLIST ── */
+  .checklist { list-style: none; display: flex; flex-direction: column; gap: 8px; margin: 12px 0; }
+  .checklist li { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; color: var(--text2); }
+  .checklist li::before { content: '☐'; color: var(--text3); flex-shrink: 0; font-size: 16px; line-height: 1.4; }
+
+  /* ── FOOTER ── */
+  .footer { text-align: center; padding: 32px; color: var(--text3); font-size: 12px; border-top: 1px solid var(--border); font-family: 'IBM Plex Mono', monospace; }
+
+  @media print {
+    body { background: #fff; color: #000; }
+    .hero { background: #f5f5f5; border: none; }
+    .code-block { border: 1px solid #ccc; }
+    .callout { border: 1px solid #ccc; }
+  }
+  @media (max-width: 600px) {
+    .hero { padding: 36px 20px; }
+    .hero h1 { font-size: 28px; }
+    .container { padding: 32px 20px 60px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">📋 Guia de Implantação</div>
+  <h1>Publicando o <span>FieldBuildFC</span><br>no GitHub</h1>
+  <p>Passo a passo completo para hospedar e acessar o sistema de qualquer dispositivo, gratuitamente, usando GitHub Pages.</p>
+</div>
+
+<div class="container">
+
+  <!-- TOC -->
+  <div class="toc">
+    <div class="toc-title">Índice — O que você vai fazer</div>
+    <ul class="toc-list">
+      <li><span class="toc-num">01</span><a href="#s1">📦 Pré-requisitos — Criar conta no GitHub</a></li>
+      <li><span class="toc-num">02</span><a href="#s2">🗂️ Criar o repositório do projeto</a></li>
+      <li><span class="toc-num">03</span><a href="#s3">⬆️ Fazer upload do arquivo fieldbuildfc.html</a></li>
+      <li><span class="toc-num">04</span><a href="#s4">⚙️ Ativar o GitHub Pages</a></li>
+      <li><span class="toc-num">05</span><a href="#s5">🌐 Acessar o sistema pelo link público</a></li>
+      <li><span class="toc-num">06</span><a href="#s6">🔄 Como atualizar o sistema no futuro</a></li>
+      <li><span class="toc-num">07</span><a href="#s7">📱 Instalar como PWA no celular</a></li>
+      <li><span class="toc-num">08</span><a href="#s8">✅ Checklist final</a></li>
+    </ul>
+  </div>
+
+  <!-- SEÇÃO 1 -->
+  <div class="section" id="s1">
+    <div class="section-label"><span class="section-num">1</span> Pré-requisitos</div>
+    <h2>Criar conta no GitHub</h2>
+    <p class="section-desc">O GitHub é onde o arquivo ficará armazenado e publicado. Se você já tem conta, pule para a seção 2.</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-icon active">1</div>
+        <div class="step-body">
+          <div class="step-title">Acesse github.com</div>
+          <div class="step-text">Abra o navegador e acesse <strong style="color:var(--accent)">https://github.com</strong></div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-icon active">2</div>
+        <div class="step-body">
+          <div class="step-title">Clique em "Sign up"</div>
+          <div class="step-text">No canto superior direito da página, clique no botão <code>Sign up</code> (ou "Criar conta" se estiver em português).</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-icon active">3</div>
+        <div class="step-body">
+          <div class="step-title">Preencha o cadastro</div>
+          <div class="step-text">Informe seu e-mail, crie uma senha e escolha um nome de usuário. <strong style="color:var(--warning)">Anote o nome de usuário escolhido</strong> — ele fará parte do endereço do seu sistema.</div>
+          <div class="callout info">
+            <div class="callout-icon">ℹ️</div>
+            <div class="callout-body">
+              <div class="callout-title">Exemplo</div>
+              Se você escolher o nome de usuário <code>joaosilva</code>, o link do sistema será:<br>
+              <code>https://joaosilva.github.io/fieldbuildfc</code>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-icon active">4</div>
+        <div class="step-body">
+          <div class="step-title">Confirme o e-mail</div>
+          <div class="step-text">O GitHub enviará um código de verificação. Abra seu e-mail, copie o código e cole na tela do GitHub para ativar a conta.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout tip">
+      <div class="callout-icon">✅</div>
+      <div class="callout-body">
+        <div class="callout-title">Conta criada com sucesso!</div>
+        Você verá a tela inicial do GitHub com seu perfil. Prossiga para o próximo passo.
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- SEÇÃO 2 -->
+  <div class="section" id="s2">
+    <div class="section-label"><span class="section-num">2</span> Repositório</div>
+    <h2>Criar o repositório do projeto</h2>
+    <p class="section-desc">Um repositório é a "pasta" do GitHub onde os arquivos do projeto ficam armazenados.</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-icon active">1</div>
+        <div class="step-body">
+          <div class="step-title">Clique no botão "New" ou "+"</div>
+          <div class="step-text">Na tela inicial do GitHub, clique no botão verde <code>New</code> (canto superior esquerdo) ou no ícone <code>+</code> no canto superior direito e selecione <strong>"New repository"</strong>.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-icon active">2</div>
+        <div class="step-body">
+          <div class="step-title">Configure o repositório</div>
+          <div class="step-text">Preencha os campos conforme abaixo:</div>
+          <table class="summary-table">
+            <thead><tr><th>Campo</th><th>Valor</th></tr></thead>
+            <tbody>
+              <tr><td>Repository name</td><td><code>fieldbuildfc</code> (tudo em minúsculas, sem espaços)</td></tr>
+              <tr><td>Description</td><td><code>Sistema de Acompanhamento de Execução de Obras</code></td></tr>
+              <tr><td>Visibility</td><td>✅ Marque <strong>Public</strong> — obrigatório para GitHub Pages gratuito</td></tr>
+              <tr><td>Add a README file</td><td>✅ Marque esta opção</td></tr>
+              <tr><td>Add .gitignore / License</td><td>Deixe como "None" (pode ignorar)</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-icon active">3</div>
+        <div class="step-body">
+          <div class="step-title">Clique em "Create repository"</div>
+          <div class="step-text">Clique no botão verde <code>Create repository</code> no final da página. Você será redirecionado para a página do repositório criado.</div>
+          <div class="callout tip">
+            <div class="callout-icon">✅</div>
+            <div class="callout-body">Você verá a pasta do projeto com um arquivo <code>README.md</code> já dentro.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- SEÇÃO 3 -->
+  <div class="section" id="s3">
+    <div class="section-label"><span class="section-num">3</span> Upload do arquivo</div>
+    <h2>Fazer upload do arquivo</h2>
+    <p class="section-desc">Agora você vai enviar o arquivo <code>fieldbuildfc.html</code> para o repositório. Para o GitHub Pages funcionar, o arquivo principal precisa se chamar <strong>index.html</strong>.</p>
+
+    <div class="callout warning">
+      <div class="callout-icon">⚠️</div>
+      <div class="callout-body">
+        <div class="callout-title">Renomeie o arquivo antes de fazer o upload</div>
+        Antes de enviar ao GitHub, renomeie o arquivo de <code>fieldbuildfc.html</code> para <code>index.html</code>. Isso faz com que o GitHub Pages o sirva diretamente pelo link raiz do projeto, sem precisar digitar o nome do arquivo na URL.
+      </div>
+    </div>
+
+    <div class="steps" style="margin-top: 20px;">
+      <div class="step">
+        <div class="step-icon active">1</div>
+        <div class="step-body">
+          <div class="step-title">Baixe o arquivo fieldbuildfc.html</div>
+          <div class="step-text">Baixe o arquivo pela conversa do Claude (botão de download no card do arquivo) e salve no seu computador. Em seguida, renomeie-o para <code>index.html</code>.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-icon active">2</div>
+        <div class="step-body">
+          <div class="step-title">Na página do repositório, clique em "Add file"</div>
+          <div class="step-text">Você verá um botão <code>Add file</code> logo acima da lista de arquivos. Clique nele e selecione <strong>"Upload files"</strong>.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-icon active">3</div>
+        <div class="step-body">
+          <div class="step-title">Arraste ou selecione o arquivo</div>
+          <div class="step-text">Arraste o arquivo <code>index.html</code> para a área pontilhada, ou clique em <strong>"choose your files"</strong> para abrir o seletor de arquivo.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-icon active">4</div>
+        <div class="step-body">
+          <div class="step-title">Confirme o commit (envio)</div>
+          <div class="step-text">Após o arquivo aparecer na lista, desça a página até a seção <strong>"Commit changes"</strong>. Deixe a mensagem padrão ou escreva algo como <code>Adiciona sistema FieldBuildFC</code>. Certifique-se de que <strong>"Commit directly to the main branch"</strong> está selecionado.</div>
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">mensagem de commit sugerida</span></div>
+            <div class="code-body"><code><span class="hl-success">Adiciona sistema FieldBuildFC v1.0</span></code></div>
+          </div>
+          <div class="step-text">Clique em <code>Commit changes</code>.</div>
+          <div class="callout tip">
+            <div class="callout-icon">✅</div>
+            <div class="callout-body">O arquivo <code>index.html</code> aparecerá na lista de arquivos do repositório.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top: 20px;">
+      <p style="color: var(--text2); font-size: 14px; margin-bottom: 12px;">Ao final desta etapa, a estrutura do repositório será:</p>
+      <div class="file-tree">
+        <span class="tree-dir">📁 fieldbuildfc/</span><br>
+        <span style="color:var(--text3)">├── </span><span class="tree-main">index.html</span>&nbsp;&nbsp;&nbsp;<span class="tree-comment">← o sistema completo</span><br>
+        <span style="color:var(--text3)">└── </span><span class="tree-file">README.md</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tree-comment">← criado automaticamente pelo GitHub</span>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- SEÇÃO 4 -->
+  <div class="section" id="s4">
+    <div class="section-label"><span class="section-num">4</span> GitHub Pages</div>
+    <h2>Ativar o GitHub Pages</h2>
+    <p class="section-desc">Esta etapa transforma o repositório em um site público acessível por qualquer navegador.</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-icon active">1</div>
+        <div class="step-body">
+          <div class="step-title">Abra as configurações do repositório</div>
+          <div class="step-text">Na página do repositório, clique na aba <code>Settings</code> (ícone de engrenagem, última aba do menu horizontal).</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-icon active">2</div>
+        <div class="step-body">
+          <div class="step-title">Acesse a seção "Pages"</div>
+          <div class="step-text">No menu lateral esquerdo de Settings, desça até a seção <strong>"Code and automation"</strong> e clique em <strong>"Pages"</strong>.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-icon active">3</div>
+        <div class="step-body">
+          <div class="step-title">Configure a fonte de publicação</div>
+          <div class="step-text">Em <strong>"Build and deployment"</strong>, configure assim:</div>
+          <table class="summary-table">
+            <thead><tr><th>Campo</th><th>Valor a selecionar</th></tr></thead>
+            <tbody>
+              <tr><td>Source</td><td><code>Deploy from a branch</code></td></tr>
+              <tr><td>Branch</td><td><code>main</code></td></tr>
+              <tr><td>Folder</td><td><code>/ (root)</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-icon active">4</div>
+        <div class="step-body">
+          <div class="step-title">Clique em "Save"</div>
+          <div class="step-text">Clique no botão <code>Save</code> ao lado da configuração de branch. O GitHub iniciará automaticamente o processo de publicação (leva de 1 a 3 minutos).</div>
+          <div class="callout info">
+            <div class="callout-icon">⏳</div>
+            <div class="callout-body">
+              <div class="callout-title">Aguarde o deploy</div>
+              Você pode acompanhar o progresso acessando a aba <code>Actions</code> no menu do repositório. Uma bolinha laranja indica que está processando; verde significa que está no ar.
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-icon done">✓</div>
+        <div class="step-body">
+          <div class="step-title">Confirme o link gerado</div>
+          <div class="step-text">Após o deploy concluir, volte para <code>Settings → Pages</code>. Você verá uma caixa verde com o texto <strong>"Your site is live at"</strong> e o link do sistema.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- SEÇÃO 5 -->
+  <div class="section" id="s5">
+    <div class="section-label"><span class="section-num">5</span> Acesso público</div>
+    <h2>Acessar o sistema pelo link</h2>
+    <p class="section-desc">Com o deploy concluído, o sistema estará disponível publicamente na internet.</p>
+
+    <div class="result-box">
+      <div class="result-title">🎉 Seu link será no formato:</div>
+      <p style="color: var(--text2); font-size: 14px; margin-top: 6px;">Substitua <code>seu-usuario</code> pelo seu nome de usuário do GitHub:</p>
+      <span class="result-url">https://seu-usuario.github.io/fieldbuildfc</span>
+      <p style="color: var(--text2); font-size: 13px; margin-top: 12px;">Exemplo real: <code>https://joaosilva.github.io/fieldbuildfc</code></p>
+    </div>
+
+    <div style="margin-top: 24px;">
+      <div class="callout tip">
+        <div class="callout-icon">📱</div>
+        <div class="callout-body">
+          <div class="callout-title">Acesse de qualquer dispositivo</div>
+          Este link funciona em celular, tablet e desktop — em qualquer navegador, sem instalação. Envie o link por WhatsApp para a equipe de campo.
+        </div>
+      </div>
+      <div class="callout info">
+        <div class="callout-icon">💾</div>
+        <div class="callout-body">
+          <div class="callout-title">Dados salvos localmente em cada dispositivo</div>
+          Os dados (obras, atividades, fotos) ficam salvos no <strong>localStorage do navegador</strong> de cada dispositivo. Cada usuário tem seus dados próprios no aparelho dele. Para centralização real dos dados em nuvem seria necessário um backend — mas para testes e validação, o sistema funciona completamente.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- SEÇÃO 6 -->
+  <div class="section" id="s6">
+    <div class="section-label"><span class="section-num">6</span> Atualizações</div>
+    <h2>Como atualizar o sistema no futuro</h2>
+    <p class="section-desc">Quando receber uma versão nova do sistema (por exemplo, novas funcionalidades ou correções), siga este processo:</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-icon info">1</div>
+        <div class="step-body">
+          <div class="step-title">Baixe o novo arquivo do Claude</div>
+          <div class="step-text">Salve o arquivo no computador e renomeie para <code>index.html</code>.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-icon info">2</div>
+        <div class="step-body">
+          <div class="step-title">Acesse o repositório no GitHub</div>
+          <div class="step-text">Entre em <code>github.com/seu-usuario/fieldbuildfc</code> e clique sobre o arquivo <code>index.html</code> na lista.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-icon info">3</div>
+        <div class="step-body">
+          <div class="step-title">Clique no ícone de edição (lápis)</div>
+          <div class="step-text">No canto superior direito da visualização do arquivo, clique no ícone de lápis ✏️ ou no botão com três pontinhos <code>···</code> e selecione <strong>"Upload file"</strong>. Isso substitui o arquivo antigo pelo novo.</div>
+          <div class="callout warning">
+            <div class="callout-icon">⚠️</div>
+            <div class="callout-body">
+              <div class="callout-title">Alternativa mais simples — substituir via upload</div>
+              Na página do repositório, clique em <code>Add file → Upload files</code>. Envie o novo <code>index.html</code>. O GitHub substituirá automaticamente o arquivo de mesmo nome.
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-icon info">4</div>
+        <div class="step-body">
+          <div class="step-title">Confirme o commit</div>
+          <div class="step-text">Escreva uma mensagem descritiva (ex: <code>Atualiza para versão 1.1 — corrige exportação</code>) e clique em <code>Commit changes</code>. O site será atualizado automaticamente em 1–2 minutos.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout tip">
+      <div class="callout-icon">🕐</div>
+      <div class="callout-body">
+        <div class="callout-title">Cache do navegador</div>
+        Se após a atualização o sistema parecer igual ao anterior, pressione <code>Ctrl + Shift + R</code> (Windows/Linux) ou <code>Cmd + Shift + R</code> (Mac) para forçar o recarregamento sem cache.
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- SEÇÃO 7 -->
+  <div class="section" id="s7">
+    <div class="section-label"><span class="section-num">7</span> PWA — Celular</div>
+    <h2>Instalar como app no celular</h2>
+    <p class="section-desc">O FieldBuildFC pode ser instalado como um aplicativo na tela inicial do celular, funcionando como um app nativo — inclusive offline.</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-icon active">📱</div>
+        <div class="step-body">
+          <div class="step-title">No iPhone (Safari)</div>
+          <div class="step-text">
+            1. Abra o link do sistema no Safari<br>
+            2. Toque no ícone de <strong>compartilhar</strong> (quadrado com seta para cima, na barra inferior)<br>
+            3. Role a lista e toque em <strong>"Adicionar à Tela de Início"</strong><br>
+            4. Confirme tocando em <strong>"Adicionar"</strong>
+          </div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-icon active">🤖</div>
+        <div class="step-body">
+          <div class="step-title">No Android (Chrome)</div>
+          <div class="step-text">
+            1. Abra o link no Chrome<br>
+            2. Toque nos <strong>três pontos</strong> (⋮) no canto superior direito<br>
+            3. Toque em <strong>"Adicionar à tela inicial"</strong> ou <strong>"Instalar aplicativo"</strong><br>
+            4. Confirme tocando em <strong>"Adicionar"</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout info">
+      <div class="callout-icon">📶</div>
+      <div class="callout-body">
+        <div class="callout-title">Uso offline no canteiro de obra</div>
+        Após instalar e abrir o app ao menos uma vez com internet, os dados do localStorage permanecem disponíveis mesmo sem conexão. Atividades cadastradas offline ficam salvas no dispositivo e podem ser sincronizadas quando houver sinal.
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- SEÇÃO 8 -->
+  <div class="section" id="s8">
+    <div class="section-label"><span class="section-num">8</span> Checklist</div>
+    <h2>Checklist final</h2>
+    <p class="section-desc">Confirme que cada item abaixo foi concluído:</p>
+
+    <ul class="checklist">
+      <li>Conta criada no GitHub e e-mail confirmado</li>
+      <li>Repositório <code>fieldbuildfc</code> criado como <strong>Public</strong></li>
+      <li>Arquivo renomeado de <code>fieldbuildfc.html</code> para <code>index.html</code></li>
+      <li>Arquivo <code>index.html</code> enviado para o repositório via upload</li>
+      <li>GitHub Pages ativado em Settings → Pages → Branch: main / Folder: / (root)</li>
+      <li>Deploy concluído (aba Actions mostra bolinha verde)</li>
+      <li>Link <code>https://seu-usuario.github.io/fieldbuildfc</code> abre o sistema</li>
+      <li>Login realizado com <code>admin / admin123</code></li>
+      <li>App instalado na tela inicial do celular (opcional)</li>
+    </ul>
+
+    <div class="result-box" style="margin-top: 32px;">
+      <div class="result-title">🏗️ FieldBuildFC publicado com sucesso!</div>
+      <p style="color: var(--text2); font-size: 14px; margin-top: 8px; line-height: 1.6;">
+        O sistema estará disponível 24h por dia, 7 dias por semana, acessível de qualquer navegador no mundo, sem custo de hospedagem, sem prazo de validade.
+      </p>
+      <table class="summary-table" style="margin-top: 20px;">
+        <thead><tr><th>Credencial</th><th>Usuário</th><th>Senha</th><th>Perfil</th></tr></thead>
+        <tbody>
+          <tr><td>Administrador</td><td>admin<!---->@<!---->fieldbuildfc<!---->.<wbr>com</td><td><code>admin123</code></td><td>Acesso total</td></tr>
+          <tr><td>Gestor de Obra</td><td>gestor<!---->@<!---->fc<!---->.<wbr>com</td><td><code>123456</code></td><td>Gestão e relatórios</td></tr>
+          <tr><td>Usuário de Campo</td><td>campo<!---->@<!---->fc<!---->.<wbr>com</td><td><code>123456</code></td><td>Registro de campo</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- PERGUNTAS FREQUENTES -->
+  <div class="section">
+    <div class="section-label">❓ Dúvidas Frequentes</div>
+    <h2>FAQ</h2>
+
+    <div style="display: flex; flex-direction: column; gap: 16px; margin-top: 20px;">
+      <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 18px 20px;">
+        <div style="font-weight: 600; color: var(--accent); margin-bottom: 6px; font-size: 14px;">O GitHub Pages é gratuito para sempre?</div>
+        <div style="color: var(--text2); font-size: 14px;">Sim. Para repositórios públicos, o GitHub Pages é gratuito sem limite de tempo. O único requisito é que o repositório seja público.</div>
+      </div>
+      <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 18px 20px;">
+        <div style="font-weight: 600; color: var(--accent); margin-bottom: 6px; font-size: 14px;">Os dados ficam salvos se eu fechar o navegador?</div>
+        <div style="color: var(--text2); font-size: 14px;">Sim. Os dados ficam salvos no <code>localStorage</code> do navegador do dispositivo. Eles persistem enquanto o usuário não limpar os dados do navegador. Cada dispositivo tem seu próprio banco local.</div>
+      </div>
+      <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 18px 20px;">
+        <div style="font-weight: 600; color: var(--accent); margin-bottom: 6px; font-size: 14px;">Posso usar um domínio próprio (ex: sistema.minhaempresa.com.br)?</div>
+        <div style="color: var(--text2); font-size: 14px;">Sim. Em Settings → Pages, há a opção "Custom domain" onde você pode apontar um domínio próprio. É necessário configurar o DNS do domínio para apontar para os servidores do GitHub (as instruções aparecem na própria tela do GitHub).</div>
+      </div>
+      <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 18px 20px;">
+        <div style="font-weight: 600; color: var(--accent); margin-bottom: 6px; font-size: 14px;">O sistema funciona sem internet no canteiro?</div>
+        <div style="color: var(--text2); font-size: 14px;">Sim, após o primeiro acesso com internet. O sistema salva tudo localmente. Atividades cadastradas offline ficam armazenadas no dispositivo e o badge de "Sincronizar" aparece quando a conexão voltar.</div>
+      </div>
+      <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 18px 20px;">
+        <div style="font-weight: 600; color: var(--accent); margin-bottom: 6px; font-size: 14px;">O código-fonte do sistema fica público no GitHub?</div>
+        <div style="color: var(--text2); font-size: 14px;">Sim, em repositórios públicos o código-fonte é visível. Se preferir manter o código privado, você precisa de uma conta <strong>GitHub Pro</strong> (paga) para usar GitHub Pages com repositórios privados — ou hospedar em outra plataforma como Netlify ou Vercel, que oferecem deploy gratuito de repositórios privados.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  FieldBuildFC · Guia de Implantação GitHub Pages · Gerado por Claude
+</div>
+
+<script>
+document.querySelectorAll('.code-copy').forEach(btn => {
+  btn.addEventListener('click', function() {
+    const code = this.closest('.code-block').querySelector('code').textContent;
+    navigator.clipboard.writeText(code).then(() => {
+      const orig = this.textContent;
+      this.textContent = '✓ copiado';
+      setTimeout(() => this.textContent = orig, 2000);
+    });
+  });
+});
+</script>
+</body>
+</html>
